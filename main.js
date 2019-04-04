@@ -1,23 +1,20 @@
 // ==UserScript==
-// @name         Paid Link Highlighter for Hacker News
+// @name         Undesirable Link Mover for Hacker News
 // @namespace    http://tampermonkey.net/
 // @version      0.1
-// @description  This script rearranges articles on Hacker News so paywalled articles appear below non-paywalled ones.
+// @description  This script rearranges articles on Hacker News so less desirable articles appear below more desiarable ones.
 // @match        https://news.ycombinator.com/*
 // @grant        All
 // ==/UserScript==
 
 (function() {
     'use strict';
-    // Paywalled lists
-    var SITES_WITH_PAYWALLS = [
+    // Lists of sites that need moving
+    var SITES_TO_MOVE = [
         "www.wsj.com",
         "www.ft.com",
         'www.mercurynews.com',
-        "www.nytimes.com"
-    ];
-    var SITES_I_SUBSCRIBE_TO = [
-        "",
+        "www.nytimes.com",
     ];
 
     var storyItemsTable = document.getElementsByClassName("itemlist")[0];
@@ -38,15 +35,15 @@
         }
     };
 
-    var isPaywalled = function(link) {
-        return ((SITES_WITH_PAYWALLS.includes(link)) && (! SITES_I_SUBSCRIBE_TO.includes(link)));
+    var needsMoving = function(link) {
+        return (SITES_TO_MOVE.includes(link));
     };
 
     for (var i = 0; i < storyItemsBody.rows.length; i = i + 3) {
         var storyRow = storyItemsBody.rows[i];
         if (storyRow.className == "athing") {
             var storyHost = storyRow.getElementsByClassName("storyLink")[0].hostname;
-            if (isPaywalled(storyHost)) {
+            if (needsMoving(storyHost)) {
                 moveRow(storyRow.rowIndex);
             }
         }

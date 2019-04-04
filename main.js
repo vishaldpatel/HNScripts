@@ -12,6 +12,8 @@
     // Paywalled lists
     var SITES_WITH_PAYWALLS = [
         "www.wsj.com",
+        "www.ft.com",
+        'www.mercurynews.com',
         "www.nytimes.com"
     ];
     var SITES_I_SUBSCRIBE_TO = [
@@ -20,9 +22,16 @@
 
     var storyItemsTable = document.getElementsByClassName("itemlist")[0];
     var storyItemsBody = storyItemsTable.getElementsByTagName("tbody")[0];
+    var moved = false;
 
     var moveRow = function(rowID) {
         // We are moving the title-row, the statistics row, and the spacer row.
+        if (!moved) {
+            var orangeDivider = document.createElement('tr');
+            orangeDivider.innerHTML = ('<td><img src="s.gif" height="10" width="0" /></td>');
+            storyItemsBody.appendChild(orangeDivider);
+        }
+        moved = true;
         for (var x = 0; x < 3; x++) {
             // Append seems to move the row.
             storyItemsBody.append(storyItemsBody.rows[rowID]);
